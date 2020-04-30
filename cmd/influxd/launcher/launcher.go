@@ -17,6 +17,7 @@ import (
 
 	"github.com/influxdata/flux"
 	platform "github.com/influxdata/influxdb/v2"
+	"github.com/influxdata/influxdb/v2/authorization"
 	"github.com/influxdata/influxdb/v2/authorizer"
 	"github.com/influxdata/influxdb/v2/bolt"
 	"github.com/influxdata/influxdb/v2/chronograf/server"
@@ -864,17 +865,17 @@ func (m *Launcher) run(ctx context.Context) (err error) {
 	}
 
 	m.apibackend = &http.APIBackend{
-		AssetsPath:           m.assetsPath,
-		HTTPErrorHandler:     kithttp.ErrorHandler(0),
-		Logger:               m.log,
-		SessionRenewDisabled: m.sessionRenewDisabled,
-		NewBucketService:     source.NewBucketService,
-		NewQueryService:      source.NewQueryService,
-		PointsWriter:         pointsWriter,
-		DeleteService:        deleteService,
-		BackupService:        backupService,
-		KVBackupService:      m.kvService,
-		AuthorizationService: authSvc,
+		AssetsPath:              m.assetsPath,
+		HTTPErrorHandler:        kithttp.ErrorHandler(0),
+		Logger:                  m.log,
+		SessionRenewDisabled:    m.sessionRenewDisabled,
+		NewBucketService:        source.NewBucketService,
+		NewQueryService:         source.NewQueryService,
+		PointsWriter:            pointsWriter,
+		DeleteService:           deleteService,
+		BackupService:           backupService,
+		KVBackupService:         m.kvService,
+		AuthorizationService:    authSvc,
 		// Wrap the BucketService in a storage backed one that will ensure deleted buckets are removed from the storage engine.
 		BucketService:                   storage.NewBucketService(bucketSvc, m.engine),
 		SessionService:                  sessionSvc,
@@ -955,8 +956,17 @@ func (m *Launcher) run(ctx context.Context) (err error) {
 		onboardHTTPServer = tenant.NewHTTPOnboardHandler(m.log, onboardSvc)
 	}
 
-	{
-		platformHandler := http.NewPlatformHandler(m.apibackend, http.WithResourceHandler(pkgHTTPServer), http.WithResourceHandler(onboardHTTPServer))
+	oldHandler := http.NewAuthorizationHandler(b.Logger, authorizationBackend)
+	newHandler := authorization.NewHTTPAuthHandler(b.Logger, b.NewAuthorizationService, nil, nil)
+	var authHTTPServer = kithttp.NewFeatureHandler(b.Flagger["newAuth"], oldHandler, newHandler, newHandler.Prefix())
+
+	// make new handler thing into a resource handler
+	// lookign for an obj called resource handler wchich is a http handler with a prefix function
+	// add prefix function (take in a string) to feasture controller
+	// pass only the flag
+	// feature.Flags("newAuth")
+	{ // add new resource handler
+		platformHandler := http.NewPlatformHandler(m.apibackend, http.WithResourceHandler(pkgHTTPServer), http.WithResourceHandler(onboardHTTPServer), http.WithResourceHandler(authHTTPServer))
 
 		httpLogger := m.log.With(zap.String("service", "http"))
 		m.httpServer.Handler = http.NewHandlerFromRegistry(
