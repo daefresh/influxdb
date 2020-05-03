@@ -101,12 +101,12 @@ spec:
 					pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Bucket
 metadata:
-  name:  valid name
+  name:  valid_name
 ---
 apiVersion: influxdata.com/v2alpha1
 kind: Bucket
 metadata:
-  name:  valid name
+  name:  valid_name
 `,
 				},
 				{
@@ -122,7 +122,7 @@ metadata:
 apiVersion: influxdata.com/v2alpha1
 kind: Bucket
 metadata:
-  name:  valid name
+  name:  valid_name
 spec:
   name:  rucket_1
 `,
@@ -140,7 +140,7 @@ metadata:
 apiVersion: influxdata.com/v2alpha1
 kind: Bucket
 metadata:
-  name:  invalid name
+  name:  invalid_name
 spec:
   name:  f
 `,
@@ -218,13 +218,12 @@ spec:
 					pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Label
 metadata:
-  name: valid name
+  name: valid_name
 spec:
 ---
 apiVersion: influxdata.com/v2alpha1
 kind: Label
 metadata:
-  name: a
 spec:
 `,
 				},
@@ -235,13 +234,13 @@ spec:
 					pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Label
 metadata:
-  name: valid name
+  name: valid_name
 spec:
 ---
 apiVersion: influxdata.com/v2alpha1
 kind: Label
 metadata:
-  name: valid name
+  name: valid_name
 spec:
 `,
 				},
@@ -255,7 +254,6 @@ kind: Label
 ---
 apiVersion: influxdata.com/v2alpha1
 kind: Label
-
 `,
 				},
 				{
@@ -265,7 +263,7 @@ kind: Label
 					pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Label
 metadata:
-  name: valid name
+  name: valid_name
 spec:
 ---
 apiVersion: influxdata.com/v2alpha1
@@ -273,7 +271,7 @@ kind: Label
 metadata:
   name: label_1
 spec:
-  name: valid name
+  name: valid_name
 `,
 				},
 				{
@@ -283,7 +281,7 @@ spec:
 					pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Label
 metadata:
-  name: valid name
+  name: valid_name
 spec:
 ---
 apiVersion: influxdata.com/v2alpha1
@@ -874,7 +872,7 @@ spec:
 apiVersion: influxdata.com/v2alpha1
 kind: CheckDeadman
 metadata:
-  name: valid name
+  name: valid_name
 spec:
   name: check_1
   every: 5m
@@ -1022,7 +1020,7 @@ spec:
 					require.Len(t, sum.Dashboards, 1)
 
 					actual := sum.Dashboards[0]
-					assert.Equal(t, "dashboard w/ single heatmap chart", actual.Name)
+					assert.Equal(t, "dashboard_w_single_heatmap_chart", actual.Name)
 					assert.Equal(t, "a dashboard w/ heatmap chart", actual.Description)
 
 					require.Len(t, actual.Charts, 1)
@@ -1063,7 +1061,7 @@ spec:
 						pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Dashboard
 metadata:
-  name: dashboard w/ single heatmap chart
+  name: dash_0
 spec:
   charts:
     - kind:   heatmap
@@ -1106,7 +1104,7 @@ spec:
 						pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Dashboard
 metadata:
-  name: dashboard w/ single heatmap chart
+  name: dash_0
 spec:
   charts:
     - kind:   heatmap
@@ -1132,7 +1130,7 @@ spec:
 						pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Dashboard
 metadata:
-  name: dashboard w/ single heatmap chart
+  name: dash_0
 spec:
   charts:
     - kind:   heatmap
@@ -1180,7 +1178,7 @@ spec:
 					require.Len(t, sum.Dashboards, 1)
 
 					actual := sum.Dashboards[0]
-					assert.Equal(t, "dashboard w/ single histogram chart", actual.Name)
+					assert.Equal(t, "dashboard_w_single_histogram_chart", actual.Name)
 					assert.Equal(t, "a dashboard w/ single histogram chart", actual.Description)
 
 					require.Len(t, actual.Charts, 1)
@@ -1218,7 +1216,7 @@ spec:
 						pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Dashboard
 metadata:
-  name: dashboard w/ single histogram chart
+  name: dash_0
 spec:
   description: a dashboard w/ single histogram chart
   charts:
@@ -1246,7 +1244,7 @@ spec:
 						pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Dashboard
 metadata:
-  name: dashboard w/ single histogram chart
+  name: dash_0
 spec:
   description: a dashboard w/ single histogram chart
   charts:
@@ -1286,7 +1284,7 @@ spec:
 					require.Len(t, sum.Dashboards, 1)
 
 					actual := sum.Dashboards[0]
-					assert.Equal(t, "dashboard w/ single markdown chart", actual.Name)
+					assert.Equal(t, "dashboard_w_single_markdown_chart", actual.Name)
 					assert.Equal(t, "a dashboard w/ single markdown chart", actual.Description)
 
 					require.Len(t, actual.Charts, 1)
@@ -1307,7 +1305,7 @@ spec:
 					require.Len(t, sum.Dashboards, 1)
 
 					actual := sum.Dashboards[0]
-					assert.Equal(t, "dashboard w/ single scatter chart", actual.Name)
+					assert.Equal(t, "dashboard_w_single_scatter_chart", actual.Name)
 					assert.Equal(t, "a dashboard w/ single scatter chart", actual.Description)
 
 					require.Len(t, actual.Charts, 1)
@@ -1348,7 +1346,7 @@ spec:
 						pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Dashboard
 metadata:
-  name:  dashboard w/ single scatter chart
+  name:  dash_0
 spec:
   description: a dashboard w/ single scatter chart
   charts:
@@ -1375,7 +1373,7 @@ spec:
 						pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Dashboard
 metadata:
-  name:  dashboard w/ single scatter chart
+  name:  dash_0
 spec:
   description: a dashboard w/ single scatter chart
   charts:
@@ -1416,7 +1414,7 @@ spec:
 						pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Dashboard
 metadata:
-  name:  dashboard w/ single scatter chart
+  name:  dash_0
 spec:
   description: a dashboard w/ single scatter chart
   charts:
@@ -1456,7 +1454,7 @@ spec:
 						pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Dashboard
 metadata:
-  name:  dashboard w/ single scatter chart
+  name:  dash_0
 spec:
   description: a dashboard w/ single scatter chart
   charts:
@@ -1498,7 +1496,7 @@ spec:
 						pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Dashboard
 metadata:
-  name:  dashboard w/ single scatter chart
+  name:  dash_0
 spec:
   description: a dashboard w/ single scatter chart
   charts:
@@ -1540,7 +1538,7 @@ spec:
 						pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Dashboard
 metadata:
-  name:  dashboard w/ single scatter chart
+  name:  dash_0
 spec:
   description: a dashboard w/ single scatter chart
   charts:
@@ -1585,7 +1583,7 @@ spec:
 						pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Dashboard
 metadata:
-  name:  dashboard w/ single scatter chart
+  name:  dash_0
 spec:
   description: a dashboard w/ single scatter chart
   charts:
@@ -1621,7 +1619,7 @@ spec:
 						pkgStr: `apiVersion: influxdata.com/v2alpha1
 kind: Dashboard
 metadata:
-  name:  dashboard w/ single scatter chart
+  name:  dash_0
 spec:
   description: a dashboard w/ single scatter chart
   charts:
@@ -3935,43 +3933,43 @@ spec:
 			sum := pkg.Summary()
 
 			require.Len(t, sum.Buckets, 1)
-			assert.Equal(t, "$bkt-1-name-ref", sum.Buckets[0].Name)
+			assert.Equal(t, "env_bkt-1-name-ref", sum.Buckets[0].Name)
 			assert.Len(t, sum.Buckets[0].LabelAssociations, 1)
 			hasEnv(t, pkg.mEnv, "bkt-1-name-ref")
 
 			require.Len(t, sum.Checks, 1)
-			assert.Equal(t, "$check-1-name-ref", sum.Checks[0].Check.GetName())
+			assert.Equal(t, "env_check-1-name-ref", sum.Checks[0].Check.GetName())
 			assert.Len(t, sum.Checks[0].LabelAssociations, 1)
 			hasEnv(t, pkg.mEnv, "check-1-name-ref")
 
 			require.Len(t, sum.Dashboards, 1)
-			assert.Equal(t, "$dash-1-name-ref", sum.Dashboards[0].Name)
+			assert.Equal(t, "env_dash-1-name-ref", sum.Dashboards[0].Name)
 			assert.Len(t, sum.Dashboards[0].LabelAssociations, 1)
 			hasEnv(t, pkg.mEnv, "dash-1-name-ref")
 
 			require.Len(t, sum.NotificationEndpoints, 1)
-			assert.Equal(t, "$endpoint-1-name-ref", sum.NotificationEndpoints[0].NotificationEndpoint.GetName())
+			assert.Equal(t, "env_endpoint-1-name-ref", sum.NotificationEndpoints[0].NotificationEndpoint.GetName())
 			hasEnv(t, pkg.mEnv, "endpoint-1-name-ref")
 
 			require.Len(t, sum.Labels, 1)
-			assert.Equal(t, "$label-1-name-ref", sum.Labels[0].Name)
+			assert.Equal(t, "env_label-1-name-ref", sum.Labels[0].Name)
 			hasEnv(t, pkg.mEnv, "label-1-name-ref")
 
 			require.Len(t, sum.NotificationRules, 1)
-			assert.Equal(t, "$rule-1-name-ref", sum.NotificationRules[0].Name)
-			assert.Equal(t, "$endpoint-1-name-ref", sum.NotificationRules[0].EndpointPkgName)
+			assert.Equal(t, "env_rule-1-name-ref", sum.NotificationRules[0].Name)
+			assert.Equal(t, "env_endpoint-1-name-ref", sum.NotificationRules[0].EndpointPkgName)
 			hasEnv(t, pkg.mEnv, "rule-1-name-ref")
 
 			require.Len(t, sum.Tasks, 1)
-			assert.Equal(t, "$task-1-name-ref", sum.Tasks[0].Name)
+			assert.Equal(t, "env_task-1-name-ref", sum.Tasks[0].Name)
 			hasEnv(t, pkg.mEnv, "task-1-name-ref")
 
 			require.Len(t, sum.TelegrafConfigs, 1)
-			assert.Equal(t, "$telegraf-1-name-ref", sum.TelegrafConfigs[0].TelegrafConfig.Name)
+			assert.Equal(t, "env_telegraf-1-name-ref", sum.TelegrafConfigs[0].TelegrafConfig.Name)
 			hasEnv(t, pkg.mEnv, "telegraf-1-name-ref")
 
 			require.Len(t, sum.Variables, 1)
-			assert.Equal(t, "$var-1-name-ref", sum.Variables[0].Name)
+			assert.Equal(t, "env_var-1-name-ref", sum.Variables[0].Name)
 			hasEnv(t, pkg.mEnv, "var-1-name-ref")
 
 			t.Log("applying env vars should populate env fields")

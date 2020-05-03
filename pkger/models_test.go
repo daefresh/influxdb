@@ -484,7 +484,7 @@ func TestPkg(t *testing.T) {
 			{
 				pkgFile:   "testdata/notification_rule.yml",
 				kind:      KindNotificationRule,
-				validName: "rule_UUID",
+				validName: "rule_uuid",
 			},
 		}
 

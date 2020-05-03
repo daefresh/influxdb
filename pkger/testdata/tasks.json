@@ -10,7 +10,7 @@
     "apiVersion": "influxdata.com/v2alpha1",
     "kind": "Task",
     "metadata": {
-      "name": "task_UUID"
+      "name": "task_uuid"
     },
     "spec": {
       "name": "task_0",

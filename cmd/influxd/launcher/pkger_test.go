@@ -636,7 +636,7 @@ func TestLauncher_Pkger(t *testing.T) {
 				initialRulePkgName     = "oh_doyle_rules"
 				initialTaskPkgName     = "tap"
 				initialTelegrafPkgName = "teletype"
-				initialVariablePkgName = "laces out dan"
+				initialVariablePkgName = "laces_out_dan"
 			)
 			initialPkg := newPkg(
 				newBucketObject(initialBucketPkgName, "display name", "init desc"),
@@ -1837,8 +1837,9 @@ spec:
 apiVersion: %[1]s
 kind: Task
 metadata:
-    name: Http.POST Synthetic (POST)
+    name: http_post_synthetic
 spec:
+    name: Http.POST Synthetic (POST)
     every: 5m
     query: |-
         import "strings"
@@ -1992,24 +1993,24 @@ spec:
 		require.NoError(t, err)
 
 		require.Len(t, sum.Buckets, 1)
-		assert.Equal(t, "$bkt-1-name-ref", sum.Buckets[0].Name)
+		assert.Equal(t, "env_bkt-1-name-ref", sum.Buckets[0].Name)
 		assert.Len(t, sum.Buckets[0].LabelAssociations, 1)
 		require.Len(t, sum.Checks, 1)
-		assert.Equal(t, "$check-1-name-ref", sum.Checks[0].Check.GetName())
+		assert.Equal(t, "env_check-1-name-ref", sum.Checks[0].Check.GetName())
 		require.Len(t, sum.Dashboards, 1)
-		assert.Equal(t, "$dash-1-name-ref", sum.Dashboards[0].Name)
+		assert.Equal(t, "env_dash-1-name-ref", sum.Dashboards[0].Name)
 		require.Len(t, sum.Labels, 1)
-		assert.Equal(t, "$label-1-name-ref", sum.Labels[0].Name)
+		assert.Equal(t, "env_label-1-name-ref", sum.Labels[0].Name)
 		require.Len(t, sum.NotificationEndpoints, 1)
-		assert.Equal(t, "$endpoint-1-name-ref", sum.NotificationEndpoints[0].NotificationEndpoint.GetName())
+		assert.Equal(t, "env_endpoint-1-name-ref", sum.NotificationEndpoints[0].NotificationEndpoint.GetName())
 		require.Len(t, sum.NotificationRules, 1)
-		assert.Equal(t, "$rule-1-name-ref", sum.NotificationRules[0].Name)
+		assert.Equal(t, "env_rule-1-name-ref", sum.NotificationRules[0].Name)
 		require.Len(t, sum.TelegrafConfigs, 1)
-		assert.Equal(t, "$task-1-name-ref", sum.Tasks[0].Name)
+		assert.Equal(t, "env_task-1-name-ref", sum.Tasks[0].Name)
 		require.Len(t, sum.TelegrafConfigs, 1)
-		assert.Equal(t, "$telegraf-1-name-ref", sum.TelegrafConfigs[0].TelegrafConfig.Name)
+		assert.Equal(t, "env_telegraf-1-name-ref", sum.TelegrafConfigs[0].TelegrafConfig.Name)
 		require.Len(t, sum.Variables, 1)
-		assert.Equal(t, "$var-1-name-ref", sum.Variables[0].Name)
+		assert.Equal(t, "env_var-1-name-ref", sum.Variables[0].Name)
 
 		expectedMissingEnvs := []string{
 			"bkt-1-name-ref",
@@ -2083,7 +2084,7 @@ metadata:
 apiVersion: %[1]s
 kind: Label
 metadata:
-  name: the 2nd label
+  name: the_2nd_label
 spec:
   name: the 2nd label
 ---
@@ -2097,12 +2098,12 @@ spec:
     - kind: Label
       name: label_1
     - kind: Label
-      name: the 2nd label
+      name: the_2nd_label
 ---
 apiVersion: %[1]s
 kind: Dashboard
 metadata:
-  name: dash_UUID
+  name: dash_uuid
 spec:
   name: dash_1
   description: desc1
@@ -2124,7 +2125,7 @@ spec:
     - kind: Label
       name: label_1
     - kind: Label
-      name: the 2nd label
+      name: the_2nd_label
 ---
 apiVersion: %[1]s
 kind: Variable
@@ -2232,7 +2233,7 @@ spec:
 apiVersion: %[1]s
 kind: NotificationRule
 metadata:
-  name:  rule_UUID
+  name:  rule_uuid
 spec:
   name:  rule_0
   description: desc_0
@@ -2259,7 +2260,7 @@ spec:
 apiVersion: %[1]s
 kind: Task
 metadata:
-  name:  task_UUID
+  name:  task_uuid
 spec:
   name:  task_1
   description: desc_1

@@ -1286,7 +1286,7 @@ func TestService(t *testing.T) {
 					assert.Equal(t, "desc_1", sum.Tasks[0].Description)
 
 					assert.NotZero(t, sum.Tasks[1].ID)
-					assert.Equal(t, "task_UUID", sum.Tasks[1].PkgName)
+					assert.Equal(t, "task_uuid", sum.Tasks[1].PkgName)
 					assert.Equal(t, "task_0", sum.Tasks[1].Name)
 					assert.Equal(t, "desc_0", sum.Tasks[1].Description)
 				})

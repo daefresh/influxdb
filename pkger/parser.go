@@ -732,7 +732,7 @@ func (p *Pkg) graphResources() error {
 func (p *Pkg) graphBuckets() *parseErr {
 	p.mBuckets = make(map[string]*bucket)
 	tracker := p.trackNames(true)
-	return p.eachResource(KindBucket, bucketNameMinLength, func(o Object) []validationErr {
+	return p.eachResource(KindBucket, func(o Object) []validationErr {
 		ident, errs := tracker(o)
 		if len(errs) > 0 {
 			return errs
@@ -770,7 +770,7 @@ func (p *Pkg) graphBuckets() *parseErr {
 func (p *Pkg) graphLabels() *parseErr {
 	p.mLabels = make(map[string]*label)
 	tracker := p.trackNames(true)
-	return p.eachResource(KindLabel, labelNameMinLength, func(o Object) []validationErr {
+	return p.eachResource(KindLabel, func(o Object) []validationErr {
 		ident, errs := tracker(o)
 		if len(errs) > 0 {
 			return errs
@@ -801,7 +801,7 @@ func (p *Pkg) graphChecks() *parseErr {
 	}
 	var pErr parseErr
 	for _, checkKind := range checkKinds {
-		err := p.eachResource(checkKind.kind, checkNameMinLength, func(o Object) []validationErr {
+		err := p.eachResource(checkKind.kind, func(o Object) []validationErr {
 			ident, errs := tracker(o)
 			if len(errs) > 0 {
 				return errs
@@ -862,7 +862,7 @@ func (p *Pkg) graphChecks() *parseErr {
 func (p *Pkg) graphDashboards() *parseErr {
 	p.mDashboards = make(map[string]*dashboard)
 	tracker := p.trackNames(false)
-	return p.eachResource(KindDashboard, dashboardNameMinLength, func(o Object) []validationErr {
+	return p.eachResource(KindDashboard, func(o Object) []validationErr {
 		ident, errs := tracker(o)
 		if len(errs) > 0 {
 			return errs
@@ -926,7 +926,7 @@ func (p *Pkg) graphNotificationEndpoints() *parseErr {
 
 	var pErr parseErr
 	for _, nk := range notificationKinds {
-		err := p.eachResource(nk.kind, 1, func(o Object) []validationErr {
+		err := p.eachResource(nk.kind, func(o Object) []validationErr {
 			ident, errs := tracker(o)
 			if len(errs) > 0 {
 				return errs
@@ -977,7 +977,7 @@ func (p *Pkg) graphNotificationEndpoints() *parseErr {
 func (p *Pkg) graphNotificationRules() *parseErr {
 	p.mNotificationRules = make(map[string]*notificationRule)
 	tracker := p.trackNames(false)
-	return p.eachResource(KindNotificationRule, 1, func(o Object) []validationErr {
+	return p.eachResource(KindNotificationRule, func(o Object) []validationErr {
 		ident, errs := tracker(o)
 		if len(errs) > 0 {
 			return errs
@@ -1027,7 +1027,7 @@ func (p *Pkg) graphNotificationRules() *parseErr {
 func (p *Pkg) graphTasks() *parseErr {
 	p.mTasks = make(map[string]*task)
 	tracker := p.trackNames(false)
-	return p.eachResource(KindTask, 1, func(o Object) []validationErr {
+	return p.eachResource(KindTask, func(o Object) []validationErr {
 		ident, errs := tracker(o)
 		if len(errs) > 0 {
 			return errs
@@ -1059,7 +1059,7 @@ func (p *Pkg) graphTasks() *parseErr {
 func (p *Pkg) graphTelegrafs() *parseErr {
 	p.mTelegrafs = make(map[string]*telegraf)
 	tracker := p.trackNames(false)
-	return p.eachResource(KindTelegraf, 0, func(o Object) []validationErr {
+	return p.eachResource(KindTelegraf, func(o Object) []validationErr {
 		ident, errs := tracker(o)
 		if len(errs) > 0 {
 			return errs
@@ -1088,7 +1088,7 @@ func (p *Pkg) graphTelegrafs() *parseErr {
 func (p *Pkg) graphVariables() *parseErr {
 	p.mVariables = make(map[string]*variable)
 	tracker := p.trackNames(true)
-	return p.eachResource(KindVariable, 1, func(o Object) []validationErr {
+	return p.eachResource(KindVariable, func(o Object) []validationErr {
 		ident, errs := tracker(o)
 		if len(errs) > 0 {
 			return errs
@@ -1118,7 +1118,7 @@ func (p *Pkg) graphVariables() *parseErr {
 	})
 }
 
-func (p *Pkg) eachResource(resourceKind Kind, minNameLen int, fn func(o Object) []validationErr) *parseErr {
+func (p *Pkg) eachResource(resourceKind Kind, fn func(o Object) []validationErr) *parseErr {
 	var pErr parseErr
 	for i, k := range p.Objects {
 		if err := k.Kind.OK(); err != nil {
@@ -1152,14 +1152,14 @@ func (p *Pkg) eachResource(resourceKind Kind, minNameLen int, fn func(o Object) 
 			continue
 		}
 
-		if len(k.Name()) < minNameLen {
+		if !isDomainName(k.Name()) {
 			pErr.append(resourceErr{
 				Kind: k.Kind.String(),
 				Idx:  intPtr(i),
 				ValidationErrs: []validationErr{
 					objectValidationErr(fieldMetadata, validationErr{
 						Field: fieldName,
-						Msg:   fmt.Sprintf("must be a string of at least %d chars in length", minNameLen),
+						Msg:   "must be a between 3-64 characters long and may only consist of alphanumeric, dots, underderscores, and hyphen characters.",
 					}),
 				},
 			})
@@ -1432,6 +1432,54 @@ func parseChart(r Resource) (chart, []validationErr) {
 	}
 
 	return c, nil
+}
+
+// isDomainName is composed of 98% of the std lib implementation, only
+// difference in ours is that we only allow lower case letters.
+func isDomainName(s string) bool {
+	l := len(s)
+	if l == 0 || l > 254 || l == 254 && s[l-1] != '.' {
+		return false
+	}
+
+	last := byte('.')
+	nonNumeric := false // true once we've seen a letter or hyphen
+	partlen := 0
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		switch {
+		default:
+			return false
+		case 'a' <= c && c <= 'z' || c == '_':
+			nonNumeric = true
+			partlen++
+		case '0' <= c && c <= '9':
+			// fine
+			partlen++
+		case c == '-':
+			// Byte before dash cannot be dot.
+			if last == '.' {
+				return false
+			}
+			partlen++
+			nonNumeric = true
+		case c == '.':
+			// Byte before dot cannot be dot, dash.
+			if last == '.' || last == '-' {
+				return false
+			}
+			if partlen > 63 || partlen == 0 {
+				return false
+			}
+			partlen = 0
+		}
+		last = c
+	}
+	if last == '-' || partlen > 63 {
+		return false
+	}
+
+	return nonNumeric
 }
 
 // Resource is a pkger Resource kind. It can be one of any of
